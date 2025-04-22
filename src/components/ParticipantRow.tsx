@@ -41,7 +41,7 @@ const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index }) =
       <td className={`px-4 py-3 text-center ${getRankColor()}`}>
         {formatRank(participant.totalRank)}
       </td>
-      <td className="px-4 py-3 font-medium text-gray-900">
+      <td className="px-4 py-3 text-sm uppercase font-medium text-gray-900">
         {participant.name}
       </td>
       <td className="px-4 py-3 text-gray-700">

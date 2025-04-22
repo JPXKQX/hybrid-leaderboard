@@ -104,19 +104,19 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         </thead>
         <tbody className="divide-y divide-gray-200">
           {sortedParticipants.map((participant, index) => {
-            const category = categories.find(c => c.id === participant.category);
+            const category = categories?.find(c => c.id === participant.category);
             return (
               <ParticipantRow 
                 key={participant.id} 
                 participant={participant} 
                 index={index}
-                allParticipants={participants}
+                allParticipants={participants || []}
                 category={category}
               />
             );
           })}
           
-          {sortedParticipants.length === 0 && (
+          {(!sortedParticipants || sortedParticipants.length === 0) && (
             <tr>
               <td colSpan={13} className="px-4 py-4 text-center text-gray-500">
                 {searchTerm ? 'No participants matching your search' : 'No participants found'}

@@ -9,13 +9,6 @@ import { computeRanks } from '../utils/formatters';
 const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
 const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
 
-console.log('Environment variables:', {
-  API_KEY: API_KEY ? 'Present' : 'Missing',
-  SHEET_ID: SHEET_ID ? 'Present' : 'Missing',
-  'import.meta.env': import.meta.env,
-  'process.env': process.env
-});
-
 if (!API_KEY || !SHEET_ID) {
   throw new Error('Missing required environment variables: VITE_GOOGLE_SHEETS_API_KEY and VITE_GOOGLE_SHEET_ID');
 }
@@ -35,10 +28,7 @@ export const fetchLeaderboardData = async (): Promise<LeaderboardData> => {
     }
     
     const data = await response.json();
-    console.log('Raw Google Sheets data:', data);
-    const processedData = processSheetData(data);
-    console.log('Processed data:', processedData);
-    return processedData;
+    return processSheetData(data);
   } catch (error) {
     console.error('Error fetching data:', error);
     throw error;

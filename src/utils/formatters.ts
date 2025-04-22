@@ -33,19 +33,21 @@ export const computeRanks = <T>(
   items: T[],
   getValue: (item: T) => number
 ): number[] => {
-  // Create array of {index, value} pairs
-  const indexedValues = items.map((item, index) => ({
-    index,
-    value: getValue(item)
-  }));
+  // Create array of {index, value} pairs, filtering out empty values
+  const indexedValues = items
+    .map((item, index) => ({
+      index,
+      value: getValue(item)
+    }))
+    .filter(item => item.value > 0); // Only include non-zero values
 
   // Sort by value (ascending)
   indexedValues.sort((a, b) => a.value - b.value);
 
   // Assign ranks
-  const ranks = new Array(items.length);
+  const ranks = new Array(items.length).fill(0); // Initialize with 0 for empty values
   let currentRank = 1;
-  let currentValue = indexedValues[0].value;
+  let currentValue = indexedValues[0]?.value;
 
   indexedValues.forEach((item, i) => {
     if (item.value > currentValue) {

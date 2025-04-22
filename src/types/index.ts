@@ -10,7 +10,9 @@ export type Participant = {
 
 export type Category = {
   id: string;
-  name: string;
+  label: string;
+  sex: 'masc' | 'fem';
+  level: 'scaled' | 'open' | 'rx';
 };
 
 export type LeaderboardData = {

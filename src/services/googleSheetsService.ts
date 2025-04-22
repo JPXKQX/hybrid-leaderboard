@@ -65,27 +65,29 @@ const processSheetData = (data: any): LeaderboardData => {
   // Process participants for each category
   const participants: Participant[] = [];
   
+  // Define categories with their properties
+  const categories: Category[] = [
+    { id: 'scaled-fem', label: 'SCALED Femenino', sex: 'fem', level: 'scaled' },
+    { id: 'scaled-masc', label: 'SCALED Masculino', sex: 'masc', level: 'scaled' },
+    { id: 'open-fem', label: 'OPEN Femenino', sex: 'fem', level: 'open' },
+    { id: 'open-masc', label: 'OPEN Masculino', sex: 'masc', level: 'open' },
+    { id: 'rx-masc', label: 'RX Masculino', sex: 'masc', level: 'rx' }
+  ];
+  
   // SCALED Femenino: rows 4-14
-  processCategoryRows(values, 4, 13, 'SCALED Femenino', participants);
+  processCategoryRows(values, 4, 13, categories[0], participants);
   
   // SCALED Masculino: rows 17-28
-  processCategoryRows(values, 17, 20, 'SCALED Masculino', participants);
+  processCategoryRows(values, 17, 20, categories[1], participants);
 
   // OPEN Femenino: rows 31-41
-  processCategoryRows(values, 31, 39, 'OPEN Femenino', participants);
+  processCategoryRows(values, 31, 39, categories[2], participants);
 
   // OPEN Masculino: rows 44-59
-  processCategoryRows(values, 44, 59, 'OPEN Masculino', participants);
+  processCategoryRows(values, 44, 59, categories[3], participants);
 
   // RX Masculino: rows 64-75
-  processCategoryRows(values, 64, 75, 'RX Masculino', participants);
-
-  // Extract unique categories from participants
-  const uniqueCategories = new Set(participants.map(p => p.category));
-  const categories: Category[] = Array.from(uniqueCategories).map(name => ({
-    id: name,
-    name: name
-  }));
+  processCategoryRows(values, 64, 75, categories[4], participants);
   
   return { participants, categories, partNames };
 };
@@ -95,7 +97,7 @@ const processCategoryRows = (
   values: any[][],
   startIndex: number,
   endIndex: number,
-  categoryName: string,
+  category: Category,
   participants: Participant[]
 ) => {
   for (let i = startIndex - 1; i <= endIndex - 1; i++) {
@@ -108,7 +110,7 @@ const processCategoryRows = (
     const participant: Participant = {
       id: `p${i}`,
       name: row[1] || 'Unknown', // Name from column B
-      category: categoryName,
+      category: category.id,
       parts: [],
       totalTime: totalTimeStringToSeconds(row[2]) || 0
     };
@@ -122,7 +124,7 @@ const processCategoryRows = (
       });
     }
     
-    console.log(`Processed participant ${i} for ${categoryName}:`, participant);
+    console.log(`Processed participant ${i} for ${category.label}:`, participant);
     participants.push(participant);
   }
 };

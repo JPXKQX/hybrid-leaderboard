@@ -1,14 +1,15 @@
 import React from 'react';
-import { Participant } from '../types';
+import { Participant, Category } from '../types';
 import { formatPartTime, formatTotalTime, formatRank, computeRanks } from '../utils/formatters';
 
 interface ParticipantRowProps {
   participant: Participant;
   index: number;
   allParticipants: Participant[];
+  category?: Category;
 }
 
-const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index, allParticipants }) => {
+const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index, allParticipants, category }) => {
   // Compute total rank
   const totalRanks = computeRanks(allParticipants, p => p.totalTime);
   const totalRank = totalRanks[allParticipants.findIndex(p => p.id === participant.id)];
@@ -55,7 +56,7 @@ const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index, all
         {participant.name}
       </td>
       <td className="px-4 py-3 text-gray-700">
-        {participant.category}
+        {category?.label || 'Unknown Category'}
       </td>
       
       {/* Total time */}

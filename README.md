@@ -1,5 +1,7 @@
 # Competition Leaderboard
 
+[jpxkqx.github.io/hybrid-leaderboard/](https://jpxkqx.github.io/hybrid-leaderboard/)
+
 A real-time leaderboard application that displays competition results across 10 parts and 3 categories, with individual and total rankings. The application fetches data directly from Google Sheets.
 
 ## Features
@@ -14,12 +16,7 @@ A real-time leaderboard application that displays competition results across 10 
 
 ## Google Sheets Integration
 
-The application is designed to fetch data from a Google Sheets document with the following structure:
-
-| ID | Name | Category | Part1 | Part2 | Part3 | Part4 | Part5 | Part6 | Part7 | Part8 | Part9 | Part10 |
-|----|------|----------|-------|-------|-------|-------|-------|-------|-------|-------|-------|--------|
-| p1 | John Smith | beginners | 120.5 | 85.2 | ... | ... | ... | ... | ... | ... | ... | ... |
-| p2 | Emma Wilson | intermediate | 110.8 | 79.6 | ... | ... | ... | ... | ... | ... | ... | ... |
+The application is designed to fetch data from a Google Sheets document.
 
 ## Setup Instructions
 
@@ -46,3 +43,7 @@ This will create a production-ready build in the `dist` directory.
 - Tailwind CSS
 - Google Sheets API
 - Vite
+
+# TODOs:
+- Add participants page with its performance in the competition.
+- Add exercise page with the statistics.

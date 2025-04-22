@@ -40,17 +40,14 @@ export const fetchLeaderboardData = async (): Promise<LeaderboardData> => {
  */
 const processSheetData = (data: any): LeaderboardData => {
   const values = data.values || [];
-  console.log('Raw values from Google Sheets:', values);
   
   // Get part names from row 2 (index 1), starting from column E (index 4)
   const rawPartNames = values[1]?.slice(4, 24) || [];
-  console.log('Raw part names:', rawPartNames);
   
   // Clean up the part names (remove any empty strings or undefined values)
   const partNames = rawPartNames
     .filter((name: string) => name && name.trim() !== '')
     .map((name: string) => name.trim());
-  console.log('Processed part names:', partNames);
   
   // Process participants for each category
   const participants: Participant[] = [];
@@ -63,8 +60,6 @@ const processSheetData = (data: any): LeaderboardData => {
     { id: 'open-masc', label: 'OPEN Masculino', sex: 'masc', level: 'open' },
     { id: 'rx-masc', label: 'RX Masculino', sex: 'masc', level: 'rx' }
   ];
-  
-  console.log('Defined categories:', categories);
   
   // SCALED Femenino: rows 4-14
   processCategoryRows(values, 4, 13, categories[0], participants);
@@ -81,9 +76,6 @@ const processSheetData = (data: any): LeaderboardData => {
   // RX Masculino: rows 64-75
   processCategoryRows(values, 64, 75, categories[4], participants);
   
-  console.log('Final participants:', participants);
-  console.log('Final categories:', categories);
-  
   return { participants, categories, partNames };
 };
 
@@ -95,11 +87,9 @@ const processCategoryRows = (
   category: Category,
   participants: Participant[]
 ) => {
-  console.log('Processing category:', category);
   for (let i = startIndex - 1; i <= endIndex - 1; i++) {
     const row = values[i];
     if (!row || row.length < 4) {
-      console.log(`Skipping invalid row ${i}:`, row);
       continue;
     }
     
@@ -111,8 +101,6 @@ const processCategoryRows = (
       totalTime: totalTimeStringToSeconds(row[2]) || 0
     };
     
-    console.log('Created participant with category:', participant.category);
-    
     // Process part times (starting from column E)
     for (let j = 0; j < 10; j++) {
       const timeIndex = 4 + (j * 2); // E, G, I, ...
@@ -122,7 +110,6 @@ const processCategoryRows = (
       });
     }
     
-    console.log(`Processed participant ${i} for ${category.label}:`, participant);
     participants.push(participant);
   }
 };

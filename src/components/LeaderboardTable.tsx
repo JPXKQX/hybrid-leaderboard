@@ -16,10 +16,6 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   searchTerm,
   partNames
 }) => {
-  console.log('LeaderboardTable received participants:', participants);
-  console.log('Search term:', searchTerm);
-  console.log('Part names in table:', partNames);
-  
   const [sortField, setSortField] = React.useState<string>('totalTime');
   const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
   
@@ -27,7 +23,6 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   const filteredParticipants = participants.filter(participant => 
     participant.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  console.log('Filtered participants:', filteredParticipants);
   
   // Sort participants based on the sort field and direction
   const sortedParticipants = [...filteredParticipants].sort((a, b) => {
@@ -51,7 +46,6 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     
     return 0;
   });
-  console.log('Sorted participants:', sortedParticipants);
   
   const handleSort = (field: string) => {
     if (sortField === field) {
@@ -92,22 +86,16 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             </SortableHeader>
             
             {/* Part headers */}
-            {partNames.map((name, idx) => {
-              console.log(`Rendering part header ${idx}:`, name);
-              return (
-                <SortableHeader key={idx} field={`part_${idx}`}>
-                  <span>{name || `Part ${idx + 1}`}</span>
-                </SortableHeader>
-              );
-            })}
+            {partNames.map((name, idx) => (
+              <SortableHeader key={idx} field={`part_${idx}`}>
+                <span>{name || `Part ${idx + 1}`}</span>
+              </SortableHeader>
+            ))}
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
           {sortedParticipants.map((participant, index) => {
-            console.log('Participant category:', participant.category);
-            console.log('Available categories:', categories);
             const category = categories?.find(c => c.id === participant.category);
-            console.log('Found category:', category);
             return (
               <ParticipantRow 
                 key={participant.id} 

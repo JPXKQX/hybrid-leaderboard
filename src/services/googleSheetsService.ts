@@ -64,6 +64,8 @@ const processSheetData = (data: any): LeaderboardData => {
     { id: 'rx-masc', label: 'RX Masculino', sex: 'masc', level: 'rx' }
   ];
   
+  console.log('Defined categories:', categories);
+  
   // SCALED Femenino: rows 4-14
   processCategoryRows(values, 4, 13, categories[0], participants);
   
@@ -79,6 +81,9 @@ const processSheetData = (data: any): LeaderboardData => {
   // RX Masculino: rows 64-75
   processCategoryRows(values, 64, 75, categories[4], participants);
   
+  console.log('Final participants:', participants);
+  console.log('Final categories:', categories);
+  
   return { participants, categories, partNames };
 };
 
@@ -90,6 +95,7 @@ const processCategoryRows = (
   category: Category,
   participants: Participant[]
 ) => {
+  console.log('Processing category:', category);
   for (let i = startIndex - 1; i <= endIndex - 1; i++) {
     const row = values[i];
     if (!row || row.length < 4) {
@@ -104,6 +110,8 @@ const processCategoryRows = (
       parts: [],
       totalTime: totalTimeStringToSeconds(row[2]) || 0
     };
+    
+    console.log('Created participant with category:', participant.category);
     
     // Process part times (starting from column E)
     for (let j = 0; j < 10; j++) {

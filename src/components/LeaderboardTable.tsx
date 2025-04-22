@@ -104,7 +104,10 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         </thead>
         <tbody className="divide-y divide-gray-200">
           {sortedParticipants.map((participant, index) => {
+            console.log('Participant category:', participant.category);
+            console.log('Available categories:', categories);
             const category = categories?.find(c => c.id === participant.category);
+            console.log('Found category:', category);
             return (
               <ParticipantRow 
                 key={participant.id} 

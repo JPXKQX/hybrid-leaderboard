@@ -4,10 +4,8 @@ export type Participant = {
   category: string;
   parts: {
     time: number; // Time in seconds
-    rank?: number; // Optional as it will be calculated
   }[];
-  totalTime?: number; // Optional as it will be calculated
-  totalRank?: number; // Optional as it will be calculated
+  totalTime: number; // Total time in seconds
 };
 
 export type Category = {

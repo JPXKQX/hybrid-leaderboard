@@ -35,16 +35,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         : b.name.localeCompare(a.name);
     }
     
-    if (sortField === 'totalRank') {
-      const aRank = a.totalRank || Infinity;
-      const bRank = b.totalRank || Infinity;
-      return sortDirection === 'asc' ? aRank - bRank : bRank - aRank;
-    }
-    
     if (sortField === 'totalTime') {
-      const aTime = a.totalTime || Infinity;
-      const bTime = b.totalTime || Infinity;
-      return sortDirection === 'asc' ? aTime - bTime : bTime - aTime;
+      return sortDirection === 'asc' ? a.totalTime - b.totalTime : b.totalTime - a.totalTime;
     }
     
     // Sort by part time
@@ -114,6 +106,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
               key={participant.id} 
               participant={participant} 
               index={index}
+              allParticipants={participants}
             />
           ))}
           

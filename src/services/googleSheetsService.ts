@@ -3,6 +3,7 @@
  */
 
 import { Participant, Category, LeaderboardData } from '../types';
+import { computeRanks } from '../utils/formatters';
 
 // Get API key and Sheet ID from environment variables
 const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
@@ -109,18 +110,15 @@ const processCategoryRows = (
       name: row[1] || 'Unknown', // Name from column B
       category: categoryName,
       parts: [],
-      totalTime: totalTimeStringToSeconds(row[2]) || 0,
-      totalRank: parseInt(row[3]) || undefined
+      totalTime: totalTimeStringToSeconds(row[2]) || 0
     };
     
-    // Process part times and ranks (starting from column E)
+    // Process part times (starting from column E)
     for (let j = 0; j < 10; j++) {
       const timeIndex = 4 + (j * 2); // E, G, I, ...
-      const rankIndex = timeIndex + 1; // F, H, J, ...
       
       participant.parts.push({
-        time: partTimeStringToSeconds(row[timeIndex]),
-        rank: parseInt(row[rankIndex]) || undefined
+        time: partTimeStringToSeconds(row[timeIndex])
       });
     }
     

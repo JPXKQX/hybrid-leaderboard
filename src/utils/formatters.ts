@@ -24,6 +24,41 @@ export const formatTotalTime = (timeInSeconds: number): string => {
 };
 
 /**
+ * Computes ranks for an array of values
+ * @param values Array of values to rank
+ * @param getValue Function to extract the value to rank from each item
+ * @returns Array of ranks (1-based)
+ */
+export const computeRanks = <T>(
+  items: T[],
+  getValue: (item: T) => number
+): number[] => {
+  // Create array of {index, value} pairs
+  const indexedValues = items.map((item, index) => ({
+    index,
+    value: getValue(item)
+  }));
+
+  // Sort by value (ascending)
+  indexedValues.sort((a, b) => a.value - b.value);
+
+  // Assign ranks
+  const ranks = new Array(items.length);
+  let currentRank = 1;
+  let currentValue = indexedValues[0].value;
+
+  indexedValues.forEach((item, i) => {
+    if (item.value > currentValue) {
+      currentRank = i + 1;
+      currentValue = item.value;
+    }
+    ranks[item.index] = currentRank;
+  });
+
+  return ranks;
+};
+
+/**
  * Formats rank with appropriate suffix
  */
 export const formatRank = (rank?: number): string => {

@@ -1,16 +1,18 @@
 import React from 'react';
-import { Participant } from '../types';
+import { Participant, Category } from '../types';
 import ParticipantRow from './ParticipantRow';
 import { ArrowUpDown } from 'lucide-react';
 
 interface LeaderboardTableProps {
   participants: Participant[];
+  categories: Category[];
   searchTerm: string;
   partNames: string[];
 }
 
 const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ 
   participants,
+  categories,
   searchTerm,
   partNames
 }) => {
@@ -18,7 +20,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   console.log('Search term:', searchTerm);
   console.log('Part names in table:', partNames);
   
-  const [sortField, setSortField] = React.useState<string>('totalRank');
+  const [sortField, setSortField] = React.useState<string>('totalTime');
   const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
   
   // Filter participants by search term
@@ -78,7 +80,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <SortableHeader field="totalRank">Rank</SortableHeader>
+            <SortableHeader field="totalTime">Rank</SortableHeader>
             <SortableHeader field="name">Name</SortableHeader>
             <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
               Category
@@ -101,14 +103,18 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {sortedParticipants.map((participant, index) => (
-            <ParticipantRow 
-              key={participant.id} 
-              participant={participant} 
-              index={index}
-              allParticipants={participants}
-            />
-          ))}
+          {sortedParticipants.map((participant, index) => {
+            const category = categories.find(c => c.id === participant.category);
+            return (
+              <ParticipantRow 
+                key={participant.id} 
+                participant={participant} 
+                index={index}
+                allParticipants={participants}
+                category={category}
+              />
+            );
+          })}
           
           {sortedParticipants.length === 0 && (
             <tr>

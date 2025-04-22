@@ -9,16 +9,17 @@ interface ParticipantRowProps {
   category?: Category;
 }
 
-const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index, allParticipants, category }) => {
+const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index, allParticipants = [], category }) => {
   // Compute total rank
   const totalRanks = computeRanks(allParticipants, p => p.totalTime);
-  const totalRank = totalRanks[allParticipants.findIndex(p => p.id === participant.id)];
-  const isTop3 = totalRank <= 3;
+  const participantIndex = allParticipants.findIndex(p => p.id === participant.id);
+  const totalRank = participantIndex >= 0 ? totalRanks[participantIndex] : 0;
+  const isTop3 = totalRank <= 3 && totalRank > 0;
   
   // Compute part ranks
   const partRanks = participant.parts.map((_, partIndex) => {
-    const ranks = computeRanks(allParticipants, p => p.parts[partIndex].time);
-    return ranks[allParticipants.findIndex(p => p.id === participant.id)];
+    const ranks = computeRanks(allParticipants, p => p.parts[partIndex]?.time || 0);
+    return participantIndex >= 0 ? ranks[participantIndex] : 0;
   });
   
   // Determine background color based on rank

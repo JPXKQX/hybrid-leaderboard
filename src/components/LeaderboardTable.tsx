@@ -2,6 +2,7 @@ import React from 'react';
 import { Participant, Category } from '../types';
 import ParticipantRow from './ParticipantRow';
 import { ArrowUpDown } from 'lucide-react';
+import { computeRanks } from '../utils/formatters';
 
 interface LeaderboardTableProps {
   participants: Participant[];
@@ -23,6 +24,9 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   const filteredParticipants = participants.filter(participant => 
     participant.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Compute ranks for all participants
+  const totalRanks = computeRanks(filteredParticipants, p => p.totalTime);
   
   // Sort participants based on the sort field and direction
   const sortedParticipants = [...filteredParticipants].sort((a, b) => {
@@ -33,7 +37,17 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     }
     
     if (sortField === 'totalTime') {
-      return sortDirection === 'asc' ? a.totalTime - b.totalTime : b.totalTime - a.totalTime;
+      const aIndex = filteredParticipants.findIndex(p => p.id === a.id);
+      const bIndex = filteredParticipants.findIndex(p => p.id === b.id);
+      const aRank = totalRanks[aIndex] || Infinity;
+      const bRank = totalRanks[bIndex] || Infinity;
+      
+      // Put unranked participants (rank 0) at the end
+      if (aRank === 0 && bRank === 0) return 0;
+      if (aRank === 0) return 1;
+      if (bRank === 0) return -1;
+      
+      return sortDirection === 'asc' ? aRank - bRank : bRank - aRank;
     }
     
     // Sort by part time
@@ -41,6 +55,12 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
       const partIndex = parseInt(sortField.split('_')[1]);
       const aTime = a.parts[partIndex]?.time || Infinity;
       const bTime = b.parts[partIndex]?.time || Infinity;
+      
+      // Put participants with no time (0) at the end
+      if (aTime === 0 && bTime === 0) return 0;
+      if (aTime === 0) return 1;
+      if (bTime === 0) return -1;
+      
       return sortDirection === 'asc' ? aTime - bTime : bTime - aTime;
     }
     
@@ -75,13 +95,13 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         <thead className="bg-gray-50">
           <tr>
             <SortableHeader field="totalTime">Rank</SortableHeader>
-            <SortableHeader field="name">Name</SortableHeader>
+            <SortableHeader field="name">Nombre</SortableHeader>
             <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-              Category
+              Categoría
             </th>
             <SortableHeader field="totalTime">
               <div className="bg-gray-50 px-2">
-                Total Time
+                Tiempo Total
               </div>
             </SortableHeader>
             
@@ -101,7 +121,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 key={participant.id} 
                 participant={participant} 
                 index={index}
-                allParticipants={participants || []}
+                allParticipants={participants}
                 category={category}
               />
             );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Participant, Category } from '../types';
 import { formatPartTime, formatTotalTime, formatRank, computeRanks } from '../utils/formatters';
 
@@ -53,8 +54,13 @@ const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index, all
       <td className={`px-4 py-3 text-center ${getRankColor()}`}>
         {formatRank(totalRank)}
       </td>
-      <td className="px-4 py-3 text-sm uppercase font-medium text-gray-900">
-        {participant.name}
+      <td className="px-4 py-3 font-medium text-gray-900">
+        <Link 
+          to={`/participant/${participant.id}`}
+          className="text-black-400 hover:text-black-800 hover:underline"
+        >
+          {participant.name}
+        </Link>
       </td>
       <td className="px-4 py-3 text-gray-700">
         {category?.label || 'Unknown Category'}

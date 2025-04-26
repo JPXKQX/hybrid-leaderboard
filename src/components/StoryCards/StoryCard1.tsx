@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/images/logo.png';
 import { formatPartTime, formatTotalTime, formatRank } from '../../utils/formatters';
 
 interface StoryCard1Props {

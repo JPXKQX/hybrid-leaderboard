@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/images/logo_squared.png';
+import logo from '../assets/images/logo.png';
 
 const LeaderboardHeader: React.FC = () => {
   return (

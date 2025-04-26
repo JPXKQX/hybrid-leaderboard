@@ -65,7 +65,7 @@ const processSheetData = (data: any): LeaderboardData => {
   processCategoryRows(values, 4, 13, categories[0], participants);
   
   // SCALED Masculino
-  processCategoryRows(values, 17, 20, categories[1], participants);
+  processCategoryRows(values, 17, 21, categories[1], participants);
 
   // OPEN Femenino
   processCategoryRows(values, 31, 40, categories[2], participants);

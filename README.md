@@ -45,5 +45,4 @@ This will create a production-ready build in the `dist` directory.
 - Vite
 
 # TODOs:
-- Add participants page with its performance in the competition.
-- Add exercise page with the statistics.
+- Add templates for Instagram Stories

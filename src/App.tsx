@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import LeaderboardContainer from './components/LeaderboardContainer';
 import ParticipantDetails from './components/ParticipantDetails';
 import PartStatistics from './components/PartStatistics';
@@ -7,7 +7,7 @@ import InstagramStory from './components/InstagramStory';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="min-h-screen bg-gray-100">
         <Routes>
           <Route path="/" element={<LeaderboardContainer />} />
@@ -16,7 +16,7 @@ function App() {
           <Route path="/part/:partIndex" element={<PartStatistics />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

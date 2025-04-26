@@ -20,7 +20,7 @@ export const fetchLeaderboardData = async (): Promise<LeaderboardData> => {
   try {
     // Fetch the data from Google Sheets, specifically rows 1-14
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Clasificacion!A1:X100?key=${API_KEY}`
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Clasificacion!A1:AA100?key=${API_KEY}`
     );
     
     if (!response.ok) {
@@ -61,20 +61,20 @@ const processSheetData = (data: any): LeaderboardData => {
     { id: 'rx-masc', label: 'RX Masculino', sex: 'masc', level: 'rx' }
   ];
   
-  // SCALED Femenino: rows 4-14
+  // SCALED Femenino
   processCategoryRows(values, 4, 13, categories[0], participants);
   
-  // SCALED Masculino: rows 17-28
+  // SCALED Masculino
   processCategoryRows(values, 17, 20, categories[1], participants);
 
-  // OPEN Femenino: rows 31-41
-  processCategoryRows(values, 31, 39, categories[2], participants);
+  // OPEN Femenino
+  processCategoryRows(values, 31, 40, categories[2], participants);
 
-  // OPEN Masculino: rows 44-59
+  // OPEN Masculino
   processCategoryRows(values, 44, 59, categories[3], participants);
 
-  // RX Masculino: rows 64-75
-  processCategoryRows(values, 64, 75, categories[4], participants);
+  // RX Masculino
+  processCategoryRows(values, 64, 78, categories[4], participants);
   
   return { participants, categories, partNames };
 };
@@ -96,6 +96,8 @@ const processCategoryRows = (
     const participant: Participant = {
       id: `p${i}`,
       name: row[1] || 'Unknown', // Name from column B
+      atletaA: row[25],
+      atletaB: row[26],
       category: category.id,
       parts: [],
       totalTime: totalTimeStringToSeconds(row[2]) || 0

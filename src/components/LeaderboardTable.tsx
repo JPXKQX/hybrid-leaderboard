@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Participant, Category } from '../types';
 import ParticipantRow from './ParticipantRow';
 import { ArrowUpDown } from 'lucide-react';
@@ -94,21 +95,19 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <SortableHeader field="totalTime">Rank</SortableHeader>
+            <SortableHeader field="rank">Rank</SortableHeader>
             <SortableHeader field="name">Nombre</SortableHeader>
             <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
               Categoría
             </th>
-            <SortableHeader field="totalTime">
-              <div className="bg-gray-50 px-2">
-                Tiempo Total
-              </div>
-            </SortableHeader>
+            <SortableHeader field="totalTime">Tiempo Total</SortableHeader>
             
             {/* Part headers */}
             {partNames.map((name, idx) => (
               <SortableHeader key={idx} field={`part_${idx}`}>
-                <span>{name || `Part ${idx + 1}`}</span>
+                <Link to={`/part/${idx}`} className="text-black-400 hover:text-black-900 hover:underline uppercase">
+                  {name || `Part ${idx + 1}`}
+                </Link>
               </SortableHeader>
             ))}
           </tr>

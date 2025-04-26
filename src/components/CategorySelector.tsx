@@ -15,8 +15,8 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
 }) => {
   // Find the selected category name
   const selectedCategoryName = selectedCategory 
-    ? categories.find(c => c.id === selectedCategory)?.label || 'All Categories'
-    : 'All Categories';
+    ? categories.find(c => c.id === selectedCategory)?.label || 'Todas las categorías'
+    : 'Todas las categorías';
 
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -47,7 +47,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
                 className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${!selectedCategory ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-800'}`}
                 onClick={() => handleSelect(undefined)}
               >
-                All Categories
+                Todas las categorías
               </button>
             </li>
             {categories.map(category => (

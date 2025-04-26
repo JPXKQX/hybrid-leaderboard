@@ -1,6 +1,8 @@
 export type Participant = {
   id: string;
   name: string;
+  atletaA: string;
+  atletaB: string;
   category: string;
   parts: {
     time: number; // Time in seconds

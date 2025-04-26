@@ -3,75 +3,99 @@ import { Participant, Category, LeaderboardData } from '../types';
 import { fetchLeaderboardData } from '../services/googleSheetsService';
 import { computeRanks } from '../utils/formatters';
 
-export const useParticipant = (id: string | undefined) => {
+interface UseParticipantReturn {
+  participant: Participant | null;
+  category: Category | null;
+  partNames: string[];
+  totalParticipants: number;
+  globalRank: number;
+  partRanks: { global: number; category: number; totalParticipants: number; categoryParticipantCount: number; }[];
+  data: LeaderboardData | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export const useParticipant = (id: string | undefined): UseParticipantReturn => {
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
   const [partNames, setPartNames] = useState<string[]>([]);
   const [totalParticipants, setTotalParticipants] = useState<number>(0);
   const [globalRank, setGlobalRank] = useState<number>(0);
-  const [partRanks, setPartRanks] = useState<{ global: number; category: number }[]>([]);
+  const [partRanks, setPartRanks] = useState<{ global: number; category: number; totalParticipants: number; categoryParticipantCount: number; }[]>([]);
+  const [data, setData] = useState<LeaderboardData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadParticipant = async () => {
-      if (!id) return;
-
       try {
-        const data = await fetchLeaderboardData();
-        const found = data.participants.find(p => p.id === id);
+        setIsLoading(true);
+        setError(null);
         
-        if (found) {
-          setParticipant(found);
-          setPartNames(data.partNames);
-          setTotalParticipants(data.participants.length);
+        const fetchedData = await fetchLeaderboardData();
+        setData(fetchedData);
+        
+        if (id) {
+          const found = fetchedData.participants.find(p => p.id === id);
           
-          // Find category
-          const foundCategory = data.categories.find(c => c.id === found.category);
-          setCategory(foundCategory || null);
-          
-          // Calculate global rank
-          const ranks = computeRanks(data.participants, p => p.totalTime);
-          const participantIndex = data.participants.findIndex(p => p.id === id);
-          setGlobalRank(ranks[participantIndex]);
-          
-          // Calculate part ranks (both global and category)
-          const categoryParticipants = data.participants.filter(p => p.category === found.category);
-          const categoryParticipantCount = categoryParticipants.length;
-          
-          const partRanksList = found.parts.map((_, partIndex) => {
-            // Global ranks
-            const globalRanks = computeRanks(data.participants, p => p.parts[partIndex]?.time || 0);
-            const globalRank = globalRanks[participantIndex];
+          if (found) {
+            setParticipant(found);
+            setPartNames(fetchedData.partNames);
+            setTotalParticipants(fetchedData.participants.length);
             
-            // Category ranks
-            const categoryRanks = computeRanks(categoryParticipants, p => p.parts[partIndex]?.time || 0);
-            const categoryParticipantIndex = categoryParticipants.findIndex(p => p.id === id);
-            const categoryRank = categoryRanks[categoryParticipantIndex];
+            // Find category
+            const foundCategory = fetchedData.categories.find(c => c.id === found.category);
+            setCategory(foundCategory || null);
             
-            return {
-              global: globalRank,
-              category: categoryRank,
-              totalParticipants,
-              categoryParticipantCount
-            };
-          });
-          
-          setPartRanks(partRanksList);
-        } else {
-          setParticipant(null);
-          setCategory(null);
-          setPartNames([]);
-          setTotalParticipants(0);
-          setGlobalRank(0);
-          setPartRanks([]);
+            // Calculate global rank
+            const ranks = computeRanks(fetchedData.participants, p => p.totalTime);
+            const participantIndex = fetchedData.participants.findIndex(p => p.id === id);
+            setGlobalRank(ranks[participantIndex]);
+            
+            // Calculate part ranks (both global and category)
+            const categoryParticipants = fetchedData.participants.filter(p => p.category === found.category);
+            const categoryParticipantCount = categoryParticipants.length;
+            
+            const partRanksList = found.parts.map((_, partIndex) => {
+              // Global ranks
+              const globalRanks = computeRanks(fetchedData.participants, p => p.parts[partIndex]?.time || 0);
+              const globalRank = globalRanks[participantIndex];
+              
+              // Category ranks
+              const categoryRanks = computeRanks(categoryParticipants, p => p.parts[partIndex]?.time || 0);
+              const categoryParticipantIndex = categoryParticipants.findIndex(p => p.id === id);
+              const categoryRank = categoryRanks[categoryParticipantIndex];
+              
+              return {
+                global: globalRank,
+                category: categoryRank,
+                totalParticipants,
+                categoryParticipantCount
+              };
+            });
+            
+            setPartRanks(partRanksList);
+          } else {
+            setParticipant(null);
+            setCategory(null);
+            setPartNames([]);
+            setTotalParticipants(0);
+            setGlobalRank(0);
+            setPartRanks([]);
+          }
         }
+        
+        setIsLoading(false);
       } catch (error) {
         console.error('Error loading participant:', error);
+        setError('Failed to load data');
         setParticipant(null);
         setCategory(null);
         setPartNames([]);
         setTotalParticipants(0);
         setGlobalRank(0);
         setPartRanks([]);
+        setIsLoading(false);
       }
     };
 
@@ -84,6 +108,9 @@ export const useParticipant = (id: string | undefined) => {
     partNames, 
     totalParticipants, 
     globalRank,
-    partRanks 
+    partRanks,
+    data,
+    isLoading,
+    error
   };
 };

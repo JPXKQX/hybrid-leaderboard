@@ -16,7 +16,6 @@ const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index, all
   const totalRanks = computeRanks(allParticipants, p => p.totalTime);
   const participantIndex = allParticipants.findIndex(p => p.id === participant.id);
   const totalRank = participantIndex >= 0 ? totalRanks[participantIndex] : 0;
-  const isTop3 = totalRank <= 3 && totalRank > 0;
   
   // Compute part ranks
   const partRanks = participant.parts.map((_, partIndex) => {
@@ -32,7 +31,7 @@ const ParticipantRow: React.FC<ParticipantRowProps> = ({ participant, index, all
       <td className="px-4 py-3 font-sm text-gray-900">
         <Link 
           to={`/participant/${participant.id}`}
-          className="text-black-400 hover:text-black-800 hover:underline uppercase"
+          className="text-black-400 hover:text-black-800 hover:font-bold hover:underline uppercase"
         >
           {participant.name}
         </Link>
